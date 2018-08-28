@@ -1,5 +1,4 @@
 import collections
-import json
 import os
 
 from functools import partial
@@ -16,9 +15,9 @@ def wait_for_tasks(queue):
 
 
 def get_task_and_run(queue):
-    task = json.loads(queue.get_next_task())
+    task = queue.get_next_task()
 
-    task_key = task["id"]
+    task_key = task.id
     update_status_callback = partial(queue.update_status, task_key)
 
     try:
@@ -28,8 +27,8 @@ def get_task_and_run(queue):
 
 
 def main():
-    config = collections.ChainMap(os.environ, DEFAULT_CONFIG)
-    queue = Queue(config)
+    queue_config = collections.ChainMap(os.environ, DEFAULT_CONFIG)
+    queue = Queue(queue_config)
 
     wait_for_tasks(queue)
 
