@@ -1,34 +1,8 @@
 import json
-
-from rundmcmc.defaults import DefaultChain
+import networkx
 from rundmcmc.partition import GeographicPartition
+
 from rundmcmc.updaters import DataTally, Election
-
-from .partition import resolve_partition
-
-
-def run_chain(run, set_message):
-    set_message("Initializing...")
-
-    chain = configure_chain(run)
-
-    for state in chain:
-        print(state)
-
-    raise NotImplementedError
-
-
-def configure_chain(run):
-    partition = resolve_partition(run)
-    constraints = resolve_constraints(run.constraints)
-    total_steps = run.total_steps
-
-    chain = DefaultChain(partition, constraints, total_steps)
-    return chain
-
-
-def resolve_constraints(constraints):
-    pass
 
 
 def resolve_run(run):
