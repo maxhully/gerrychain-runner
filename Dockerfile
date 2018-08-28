@@ -8,6 +8,4 @@ RUN pipenv install --system --deploy
 
 COPY ./runner /app
 
-EXPOSE 5000
-
 CMD pipenv run python main.py

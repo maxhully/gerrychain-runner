@@ -5,15 +5,19 @@ from .models import Run
 
 
 class Queue:
-    def __init__(self, redis_config, key="queue"):
-        self.redis = StrictRedis(**redis_config)
+    def __init__(self, redis_config, key="queue", Cache=StrictRedis):
+        self.redis = Cache(**redis_config)
         self.key = key
 
     def ping(self):
         return self.redis.ping()
 
     def get_next_task(self):
-        return self.redis.brpop(self.key)
+        task_json = None
+        while task_json is None:
+            key, task_json = self.redis.brpop(self.key, timeout=1)
+        run_spec = json.loads(task_json)
+        return Run(run_spec)
 
     def list_tasks(self):
         json_items = self.redis.lrange(self.key, 0, -1)
