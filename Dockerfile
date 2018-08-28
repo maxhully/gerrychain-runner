@@ -1,4 +1,4 @@
-FROM python:3.6.6
+FROM python:3.6.5
 RUN pip install pipenv
 
 WORKDIR /app
@@ -6,6 +6,6 @@ WORKDIR /app
 COPY Pipfile Pipfile.lock /app/
 RUN pipenv install --system --deploy
 
-COPY ./runner /app
+COPY . /app
 
-CMD pipenv run python main.py
+CMD pipenv run python -m runner
