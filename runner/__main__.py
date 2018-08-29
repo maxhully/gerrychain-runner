@@ -1,9 +1,8 @@
 import logging
 
 from .queue import Queue
+from .config import get_redis_config
 from .chain import run_chain
-
-DEFAULT_CONFIG = {"host": "localhost"}
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
@@ -38,7 +37,7 @@ def get_task_and_run(queue):
 
 def main():
     log.info("Starting runner...")
-    queue_config = DEFAULT_CONFIG
+    queue_config = get_redis_config()
     queue = Queue(queue_config)
 
     wait_for_tasks(queue)
