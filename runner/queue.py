@@ -13,9 +13,10 @@ class Queue:
         return self.redis.ping()
 
     def get_next_task(self):
-        task_json = None
-        while task_json is None:
-            key, task_json = self.redis.brpop(self.key, timeout=1)
+        response = None
+        while response is None:
+            response = self.redis.brpop(self.key, timeout=1)
+        key, task_json = response
         run_spec = json.loads(task_json)
         return Run(run_spec)
 
