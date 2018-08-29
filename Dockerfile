@@ -1,11 +1,12 @@
 FROM python:3.6.5
 RUN pip install pipenv
 
-WORKDIR /app
+WORKDIR /app/
 
 COPY Pipfile Pipfile.lock /app/
-RUN pipenv install --system --deploy
+
+RUN pipenv install --system
 
 COPY . /app
 
-CMD pipenv run python -m runner
+CMD python -m runner

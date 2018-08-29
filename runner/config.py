@@ -14,7 +14,7 @@ def get_redis_config():
     return {
         "host": config["REDIS_HOST"],
         "port": int(config["REDIS_PORT"]),
-        "db": int(config["REDIS_PORT"]),
+        "db": int(config["REDIS_DB"]),
         "password": config["REDIS_PASSWORD"],
         "ssl": bool(config["REDIS_SSL"]),
     }
