@@ -44,4 +44,4 @@ class Queue:
         self.update_status(task["id"], "FAILED")
 
     def complete_task(self, task_key):
-        self.update_status(task_key, "COMPLETED")
+        self.update_status(task_key, "COMPLETE")
