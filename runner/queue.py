@@ -20,19 +20,6 @@ class Queue:
         run_spec = json.loads(task_json)
         return Run(run_spec)
 
-    def list_tasks(self):
-        json_items = self.redis.lrange(self.key, 0, -1)
-        return [Run(json.loads(item)) for item in json_items]
-
-    def get_status(self, task_id):
-        status_json = self.redis.get(task_id)
-
-        if status_json is None:
-            raise KeyError
-
-        status = json.loads(status_json)
-        return status
-
     def update_status(self, task_key, message):
         self.redis.set(task_key, json.dumps({"id": task_key, "status": message}))
 
@@ -42,7 +29,3 @@ class Queue:
         task["attempts"] += 1
         self.update_status(task["id"], "Failed. Retrying...")
         self.redis.rpush(json.dumps(task))
-
-    def add_task(self, task):
-        self.redis.lpush(self.key, json.dumps(task))
-        self.update_status(task["id"], "Waiting...")
