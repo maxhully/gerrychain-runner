@@ -5,9 +5,10 @@ from .models import Run
 
 
 class Queue:
-    def __init__(self, redis_config, key="queue", Cache=StrictRedis):
+    def __init__(self, redis_config, key="queue", Cache=StrictRedis, Task=Run):
         self.redis = Cache(**redis_config)
         self.key = key
+        self.Task = Task
 
     def ping(self):
         return self.redis.ping()
@@ -17,9 +18,9 @@ class Queue:
         while response is None:
             response = self.redis.brpop(self.key, timeout=1)
         key, task_json = response
-        run_spec = json.loads(task_json)
-        self.update_status(self, run_spec["id"], "RUNNING")
-        return Run(run_spec)
+        task_spec = json.loads(task_json)
+        self.update_status(self, task_spec["id"], "RUNNING")
+        return self.Task(task_spec)
 
     def update_status(self, task_key, status):
         if status not in ("WAITING", "FAILED", "RUNNING", "COMPLETE"):
