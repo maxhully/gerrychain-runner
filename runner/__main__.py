@@ -34,6 +34,8 @@ def get_task_and_run(queue):
     except Exception as err:
         queue.return_failed_task(task, err)
 
+    queue.complete_task(task_key)
+
 
 def main():
     log.info("Starting runner...")
