@@ -18,6 +18,7 @@ class Queue:
             response = self.redis.brpop(self.key, timeout=1)
         key, task_json = response
         run_spec = json.loads(task_json)
+        self.update_status(self, run_spec["id"], "RUNNING")
         return Run(run_spec)
 
     def update_status(self, task_key, status):
