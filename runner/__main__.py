@@ -15,10 +15,10 @@ def wait_for_tasks(queue):
         get_task_and_run(queue)
 
 
-def update_status_and_log(queue, task_key):
+def send_message_and_log(queue, task_key):
     def callback(message):
         log.info(task_key + " | " + message)
-        queue.update_status(task_key, message)
+        queue.send_message(task_key, message)
 
     return callback
 
@@ -27,7 +27,7 @@ def get_task_and_run(queue):
     task = queue.get_next_task()
 
     task_key = task.id
-    callback = update_status_and_log(queue, task_key)
+    callback = send_message_and_log(queue, task_key)
 
     try:
         run_chain(task, callback)
@@ -37,8 +37,7 @@ def get_task_and_run(queue):
 
 def main():
     log.info("Starting runner...")
-    queue_config = get_redis_config()
-    queue = Queue(queue_config)
+    queue = Queue(get_redis_config())
 
     wait_for_tasks(queue)
 

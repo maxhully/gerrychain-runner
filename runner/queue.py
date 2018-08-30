@@ -20,12 +20,20 @@ class Queue:
         run_spec = json.loads(task_json)
         return Run(run_spec)
 
-    def update_status(self, task_key, message):
-        self.redis.set(task_key, json.dumps({"id": task_key, "status": message}))
+    def update_status(self, task_key, status):
+        if status not in ("WAITING", "FAILED", "RUNNING", "COMPLETE"):
+            raise ValueError(
+                "Status is not one of 'WAITING', 'RUNNING', 'FAILED', or 'COMPLETE'"
+            )
+        self.redis.set(task_key, json.dumps({"id": task_key, "status": status}))
+        self.send_message(task_key, "Status is set to {}".format(status))
 
-    def return_failed_task(self, task, err=None):
-        if "attempts" not in task:
-            task["attempts"] = 0
-        task["attempts"] += 1
-        self.update_status(task["id"], "Failed. Retrying...")
-        self.redis.rpush(json.dumps(task))
+    def send_message(self, task_key, message):
+        self.redis.publish(channel=task_key, message=message)
+
+    def return_failed_task(self, task):
+        if "attempts" in task:
+            task["failed_attempts"] += 1
+        else:
+            task["failed_attempts"] = 1
+        self.redis.rpush(self.key, json.dumps(task))
