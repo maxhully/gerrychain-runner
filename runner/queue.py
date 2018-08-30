@@ -41,7 +41,7 @@ class Queue:
         else:
             task["failed_attempts"] = 1
         self.redis.rpush(self.key, json.dumps(task))
-        self.update_status(self, task["id"], "FAILED")
+        self.update_status(task["id"], "FAILED")
 
     def complete_task(self, task_key):
-        self.update_status(self, task_key, "COMPLETED")
+        self.update_status(task_key, "COMPLETED")
