@@ -16,7 +16,7 @@ def test_queue_sets_status_to_RUNNING_when_getting_new_task(queue):
     queue.redis.brpop.return_value = ("queue", '{"id": "mock-id"}')
     queue.get_next_task()
 
-    assert queue.update_status.call_args[0] == (queue, "mock-id", "RUNNING")
+    assert queue.update_status.call_args[0] == ("mock-id", "RUNNING")
 
 
 def test_queue_only_accepts_statuses_among_WAITING_FAILED_RUNNING_and_COMPLETE(queue):
