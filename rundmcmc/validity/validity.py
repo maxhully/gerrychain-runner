@@ -7,11 +7,13 @@ from heapq import heappush, heappop
 from itertools import count
 
 import networkx as nx
-import matplotlib.pyplot as plt
 
 from rundmcmc.updaters import CountySplit
-from rundmcmc.validity.bounds import (SelfConfiguringLowerBound, SelfConfiguringUpperBound,
-                                      Bounds)
+from rundmcmc.validity.bounds import (
+    SelfConfiguringLowerBound,
+    SelfConfiguringUpperBound,
+    Bounds,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,31 +46,37 @@ class Validator:
             elif is_valid is True:
                 pass
             else:
-                raise TypeError(f"Constraint {constraint.__name__} returned a non-boolean.")
+                raise TypeError(
+                    f"Constraint {constraint.__name__} returned a non-boolean."
+                )
 
         # all constraints are satisfied
         return True
 
 
 def L1_reciprocal_polsby_popper(partition):
-    return sum(1 / value for value in partition['polsby_popper'].values())
+    return sum(1 / value for value in partition["polsby_popper"].values())
 
 
 def L1_polsby_popper(partition):
-    return sum(value for value in partition['polsby_popper'].values())
+    return sum(value for value in partition["polsby_popper"].values())
 
 
 def L2_polsby_popper(partition):
-    return math.sqrt(sum(value**2 for value in partition['polsby_popper'].values()))
+    return math.sqrt(sum(value ** 2 for value in partition["polsby_popper"].values()))
 
 
 def L_minus_1_polsby_popper(partition):
-    return len(partition.parts) / sum(1 / value for value in partition['polsby_popper'].values())
+    return len(partition.parts) / sum(
+        1 / value for value in partition["polsby_popper"].values()
+    )
 
 
 no_worse_L_minus_1_polsby_popper = SelfConfiguringLowerBound(L_minus_1_polsby_popper)
 
-no_worse_L1_reciprocal_polsby_popper = SelfConfiguringUpperBound(L1_reciprocal_polsby_popper)
+no_worse_L1_reciprocal_polsby_popper = SelfConfiguringUpperBound(
+    L1_reciprocal_polsby_popper
+)
 
 
 def within_percent_of_ideal_population(initial_partition, percent=0.01):
@@ -83,11 +91,12 @@ def within_percent_of_ideal_population(initial_partition, percent=0.01):
     :returns: A :class:`.Bounds` instance.
 
     """
+
     def population(partition):
         return partition["population"].values()
 
-    number_of_districts = len(initial_partition['population'].keys())
-    total_population = sum(initial_partition['population'].values())
+    number_of_districts = len(initial_partition["population"].keys())
+    total_population = sum(initial_partition["population"].values())
     ideal_population = total_population / number_of_districts
     bounds = ((1 - percent) * ideal_population, (1 + percent) * ideal_population)
 
@@ -187,8 +196,11 @@ def single_flip_contiguous(partition):
     for changed_node, _ in flips.items():
         old_assignment = partition.parent.assignment[changed_node]
 
-        old_neighbors = [node for node in graph.neighbors(changed_node)
-                         if assignment[node] == old_assignment]
+        old_neighbors = [
+            node
+            for node in graph.neighbors(changed_node)
+            if assignment[node] == old_assignment
+        ]
 
         if not old_neighbors:
             # Under our assumptions, if there are no old neighbors, then the
@@ -197,7 +209,9 @@ def single_flip_contiguous(partition):
 
         start_neighbor = random.choice(old_neighbors)
 
-        connected = are_reachable(graph, start_neighbor, partition_edge_avoid, old_neighbors)
+        connected = are_reachable(
+            graph, start_neighbor, partition_edge_avoid, old_neighbors
+        )
 
         if not connected:
             return False
@@ -224,6 +238,7 @@ def contiguous(partition):
     def proposed_assignment(node):
         """Return the proposed assignment of the given node."""
         return partition.assignment[node]
+
     # TODO
 
     # Creates a dictionary where the key is the district and the value is
@@ -250,7 +265,8 @@ def contiguous(partition):
 
 def fast_connected(partition):
     """
-    Checks that a given partition's components are connected using a simple breadth-first search.
+    Checks that a given partition's components are connected using a
+    simple breadth-first search.
 
     :partition: Instance of Partition; contains connected components.
     :returns: Boolean; Are the components of this partition connected?
@@ -302,41 +318,42 @@ def non_bool_fast_connected(partition):
     return returns
 
 
-def non_bool_where(partition):
-    """
-    Return the number of non-connected assignment subgraphs.
+# def non_bool_where(partition):
+#     """
+#     Return the number of non-connected assignment subgraphs.
 
-    :partition: Instance of Partition; contains connected components.
-    :return: int: number of contiguous districts
-    """
-    assignment = partition.assignment
+#     :partition: Instance of Partition; contains connected components.
+#     :return: int: number of contiguous districts
+#     """
+#     assignment = partition.assignment
 
-    # Inverts the assignment dictionary so that lists of VTDs are keyed
-    # by their congressional districts.
-    districts = collections.defaultdict(set)
-    returns = 0
+#     # Inverts the assignment dictionary so that lists of VTDs are keyed
+#     # by their congressional districts.
+#     districts = collections.defaultdict(set)
+#     returns = 0
 
-    for vtd in assignment:
-        districts[assignment[vtd]].add(vtd)
+#     for vtd in assignment:
+#         districts[assignment[vtd]].add(vtd)
 
-    # Generates a subgraph for each district and perform a BFS on it
-    # to check connectedness.
-    for district in districts:
-        adj = nx.to_dict_of_lists(partition.graph, districts[district])
-        if _bfs(adj):
-            returns += 1
-        else:
-            print(district)
-            nx.draw(partition.graph.subgraph(districts[district]))
-            plt.show()
-            print(districts[district])
-            for subdistrict in nx.connected_components(
-                    partition.graph.subgraph(districts[district])):
-                nx.draw(partition.graph.subgraph(subdistrict), with_labels=True)
-                plt.show()
-                print(subdistrict)
+#     # Generates a subgraph for each district and perform a BFS on it
+#     # to check connectedness.
+#     for district in districts:
+#         adj = nx.to_dict_of_lists(partition.graph, districts[district])
+#         if _bfs(adj):
+#             returns += 1
+#         else:
+#             print(district)
+#             nx.draw(partition.graph.subgraph(districts[district]))
+#             plt.show()
+#             print(districts[district])
+#             for subdistrict in nx.connected_components(
+#                 partition.graph.subgraph(districts[district])
+#             ):
+#                 nx.draw(partition.graph.subgraph(subdistrict), with_labels=True)
+#                 plt.show()
+#                 print(subdistrict)
 
-    return returns
+#     return returns
 
 
 no_more_disconnected = SelfConfiguringLowerBound(non_bool_fast_connected)
@@ -358,7 +375,8 @@ def proposed_changes_still_contiguous(partition):
     if partition.parent:
         if partition.flips.keys is not None:
             districts_of_interest = set(partition.flips.values()).union(
-                                        set(map(partition.parent.assignment.get, partition.flips)))
+                set(map(partition.parent.assignment.get, partition.flips))
+            )
         else:
             districts_of_interest = []
 
@@ -446,6 +464,7 @@ def refuse_new_splits(partition_county_field):
                              :func:`.county_splits`.
 
     """
+
     def _refuse_new_splits(partition):
         for county_info in partition[partition_county_field].values():
             if county_info.split == CountySplit.NEW_SPLIT:

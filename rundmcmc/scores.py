@@ -1,4 +1,4 @@
-import numpy
+import statistics
 
 
 def mean_median(election_results):
@@ -10,7 +10,7 @@ def mean_median(election_results):
     first_party_results, *others = election_results.percents_for_party.values()
     data = list(first_party_results.values())
 
-    return numpy.median(data) - numpy.mean(data)
+    return statistics.median(data) - statistics.mean(data)
 
 
 def mean_thirdian(election_results):
@@ -25,7 +25,7 @@ def mean_thirdian(election_results):
     thirdian_index = round(len(data) / 3)
     thirdian = sorted(data)[thirdian_index]
 
-    return thirdian - numpy.mean(data)
+    return thirdian - statistics.mean(data)
 
 
 def efficiency_gap(election_results):
@@ -35,8 +35,9 @@ def efficiency_gap(election_results):
     in the Election's parties_to_columns dictionary.
     """
     party1, party2 = election_results.totals_for_party.values()
-    wasted_votes_by_part = {part: wasted_votes(party1[part], party2[part])
-                            for part in party1}
+    wasted_votes_by_part = {
+        part: wasted_votes(party1[part], party2[part]) for part in party1
+    }
     total_votes = sum(party1.values()) + sum(party2.values())
     numerator = sum(waste2 - waste1 for waste1, waste2 in wasted_votes_by_part.values())
     return numerator / total_votes

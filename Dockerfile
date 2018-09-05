@@ -9,4 +9,6 @@ RUN pipenv install --system
 
 COPY . /app
 
+RUN python setup.py install
+
 CMD python -m runner
