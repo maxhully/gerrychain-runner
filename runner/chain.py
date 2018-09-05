@@ -6,4 +6,5 @@ def run(run_spec, message):
     plan = run_spec.plan
     callback = message
 
-    run_chain(length, plan=plan, callback=callback)
+    reports = run_chain(length, plan=plan, callback=callback)
+    return reports

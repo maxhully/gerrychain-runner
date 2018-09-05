@@ -93,7 +93,7 @@ def get_updaters():
     return updaters, required_fields
 
 
-def get_partition(plan, graph_path="./PA_FINAL_Full.json"):
+def get_partition(plan, graph_path="/app/runner/PA_FINAL_Full.json"):
     with open(graph_path) as f:
         graph = Graph.from_json(f)
     updaters, required_fields = get_updaters()

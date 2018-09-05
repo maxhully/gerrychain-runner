@@ -43,5 +43,6 @@ class Queue:
         self.redis.rpush(self.key, json.dumps(task))
         self.update_status(task["id"], "FAILED")
 
-    def complete_task(self, task_key):
+    def complete_task(self, task_key, return_value):
         self.update_status(task_key, "COMPLETE")
+        self.redis.set(task_key + "-report", return_value)
