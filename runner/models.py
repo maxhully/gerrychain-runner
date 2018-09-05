@@ -6,7 +6,7 @@ def generate_id():
 
 
 class Run:
-    required_fields = ["graph", "constraints", "total_steps"]
+    required_fields = ["graph", "plan", "total_steps"]
 
     def __init__(self, run_spec):
         self.validate(run_spec)
@@ -16,7 +16,7 @@ class Run:
 
         self.id = run_spec["id"]
         self.graph = run_spec["graph"]
-        self.constraints = run_spec["constraints"]
+        self.constraints = run_spec["plan"]
         self.total_steps = run_spec["total_steps"]
 
     def validate(self, spec):
@@ -32,6 +32,5 @@ class Run:
 
     def public(self):
         return {
-            key: getattr(self, key)
-            for key in ("id", "graph", "constraints", "total_steps")
+            key: getattr(self, key) for key in ("id", "graph", "plan", "total_steps")
         }

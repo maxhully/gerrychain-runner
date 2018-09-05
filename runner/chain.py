@@ -1,8 +1,9 @@
-from time import sleep
+from split_chain import run_chain
 
 
-def run_chain(run_spec, message):
-    message("Working!")
-    sleep(5)
-    message("Done!")
-    return True
+def run(run_spec, message):
+    length = run_spec.total_steps
+    plan = run_spec.plan
+    callback = message
+
+    run_chain(length, plan=plan, callback=callback)
