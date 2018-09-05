@@ -16,7 +16,7 @@ class Run:
 
         self.id = run_spec["id"]
         self.graph = run_spec["graph"]
-        self.constraints = run_spec["plan"]
+        self.plan = run_spec["plan"]
         self.total_steps = run_spec["total_steps"]
 
     def validate(self, spec):

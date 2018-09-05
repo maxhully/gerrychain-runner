@@ -28,7 +28,7 @@ from rundmcmc.validity import (
     within_percent_of_ideal_population,
 )
 
-from graph import Graph
+from .graph import Graph
 
 
 def get_elections(election_names, election_columns):

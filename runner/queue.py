@@ -35,7 +35,8 @@ class Queue:
     def send_message(self, task_key, message):
         self.redis.publish(channel=task_key, message=message)
 
-    def return_failed_task(self, task):
+    def return_failed_task(self, task, err):
+        self.send_message(task["id"], str(err))
         if "attempts" in task:
             task["failed_attempts"] += 1
         else:

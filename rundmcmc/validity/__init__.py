@@ -44,17 +44,28 @@ examples of this.
 
 """
 
-from .validity import (L1_reciprocal_polsby_popper,
-                       L_minus_1_polsby_popper, Validator,
-                       no_worse_L_minus_1_polsby_popper,
-                       no_worse_L1_reciprocal_polsby_popper,
-                       no_vanishing_districts, refuse_new_splits,
-                       single_flip_contiguous, contiguous,
-                       within_percent_of_ideal_population,
-                       districts_within_tolerance,
-                       fast_connected, no_more_disconnected,
-                       non_bool_fast_connected, L1_polsby_popper,
-                       L2_polsby_popper, proposed_changes_still_contiguous,
-                       non_bool_where)
-
-from .bounds import UpperBound, LowerBound, SelfConfiguringLowerBound, SelfConfiguringUpperBound
+from .validity import (
+    L1_reciprocal_polsby_popper,
+    L_minus_1_polsby_popper,
+    Validator,
+    no_worse_L_minus_1_polsby_popper,
+    no_worse_L1_reciprocal_polsby_popper,
+    no_vanishing_districts,
+    refuse_new_splits,
+    single_flip_contiguous,
+    contiguous,
+    within_percent_of_ideal_population,
+    districts_within_tolerance,
+    fast_connected,
+    no_more_disconnected,
+    non_bool_fast_connected,
+    L1_polsby_popper,
+    L2_polsby_popper,
+    proposed_changes_still_contiguous,
+)
+from .bounds import (
+    UpperBound,
+    LowerBound,
+    SelfConfiguringLowerBound,
+    SelfConfiguringUpperBound,
+)

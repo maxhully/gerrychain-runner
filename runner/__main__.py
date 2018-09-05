@@ -2,7 +2,7 @@ import logging
 
 from .queue import Queue
 from .config import get_redis_config
-from .chain import run_chain
+from .chain import run
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
@@ -30,7 +30,7 @@ def get_task_and_run(queue):
     callback = send_message_and_log(queue, task_key)
 
     try:
-        run_chain(task, callback)
+        run(task, callback)
     except Exception as err:
         queue.return_failed_task(task, err)
 
