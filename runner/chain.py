@@ -1,4 +1,4 @@
-from split_chain import run_chain
+from .split_chain import run_chain
 
 
 def run(run_spec, message):
