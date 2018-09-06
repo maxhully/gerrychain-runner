@@ -37,5 +37,13 @@ def test_runner_passes_return_value_when_completing_task(queue):
     with patch("runner.__main__.run") as mock_run:
         mock_run.return_value = "mock_result"
         get_task_and_run(queue)
-    assert len(queue.complete_task.call_args) == 2
+    assert len(queue.complete_task.call_args[0]) == 2
     assert queue.complete_task.call_args[0][1] == "mock_result"
+
+
+def test_runner_passes_error_traceback_on_error(queue):
+    with patch("runner.__main__.run") as run:
+        run.side_effect = Exception("Mock exception")
+        expected_error = run.side_effect
+        get_task_and_run(queue)
+    assert queue.return_failed_task.call_args[0][1] == expected_error
