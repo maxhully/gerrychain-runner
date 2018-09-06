@@ -92,7 +92,7 @@ def get_updaters():
     return updaters, required_fields
 
 
-def get_partition(plan, graph_path="/app/runner/PA_FINAL_Full.json"):
+def get_partition(plan, graph_path="/app/runner/PA_FINAL_Full-fixed.json"):
     with open(graph_path) as f:
         graph = Graph.from_json(f)
     updaters, required_fields = get_updaters()
@@ -102,11 +102,12 @@ def get_partition(plan, graph_path="/app/runner/PA_FINAL_Full.json"):
 
 
 def get_constraints(partition):
-    ideal = sum(partition["population"].values()) / len(partition.parts)
-    current_worst_pop_deviation = max(
-        abs(pop - ideal) for pop in partition["population"].values()
-    )
-    pop_limit = max(0.01, current_worst_pop_deviation)
+    # ideal = sum(partition["population"].values()) / len(partition.parts)
+    # current_worst_pop_deviation = max(
+    # abs(pop - ideal) for pop in partition["population"].values()
+    # )
+    # pop_limit = max(0.01, current_worst_pop_deviation)
+    pop_limit = 0.01
 
     population_constraint = within_percent_of_ideal_population(partition, pop_limit)
 

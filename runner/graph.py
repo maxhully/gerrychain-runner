@@ -59,7 +59,7 @@ class Graph(networkx.Graph):
 
 
 def main():
-    with open("./PA_FINAL_Full.json") as f:
+    with open("./PA_FINAL_Full-fixed.json") as f:
         graph = Graph.from_json(f)
     if graph.validate_geography():
         print("Geography is valid!")
