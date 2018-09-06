@@ -1,4 +1,3 @@
-import random
 import sys
 
 
@@ -103,7 +102,12 @@ def get_partition(plan, graph_path="/app/runner/PA_FINAL_Full.json"):
 
 
 def get_constraints(partition):
-    pop_limit = .01
+    ideal = sum(partition["population"].values()) / len(partition.parts)
+    current_worst_pop_deviation = max(
+        abs(pop - ideal) for pop in partition["population"].values()
+    )
+    pop_limit = max(0.01, current_worst_pop_deviation)
+
     population_constraint = within_percent_of_ideal_population(partition, pop_limit)
 
     compactness_constraint_Lm1 = LowerBound(
@@ -135,9 +139,7 @@ def get_chain(plan, steps):
     return chain
 
 
-def run_chain(length, seed=1965, plan="Remedial_p", callback=print):
-    random.seed(seed)
-
+def run_chain(length, plan="Remedial_p", callback=print):
     chain = get_chain(plan, steps=length)
 
     reports = {
