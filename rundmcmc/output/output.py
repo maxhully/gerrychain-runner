@@ -137,6 +137,8 @@ class Histogram:
     Anthony is working on the super smart histogram that does the binning for you.
     """
 
+    precision = 4
+
     def __init__(self, bounds, number_of_bins):
         self.bounds = bounds
         self.number_of_bins = number_of_bins
@@ -165,7 +167,10 @@ class Histogram:
 
     def json(self):
         def get_bin(bin_index):
-            return (self.bin_size * bin_index, self.bin_size * (bin_index + 1))
+            return (
+                round(self.bin_size * bin_index, self.precision),
+                round(self.bin_size * (bin_index + 1), self.precision),
+            )
 
         return [(get_bin(index), count) for index, count in self.counter.items()]
 
